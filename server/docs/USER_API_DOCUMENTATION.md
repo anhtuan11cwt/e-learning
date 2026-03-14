@@ -8,6 +8,18 @@
 
 ---
 
+## 📌 Danh Mục API
+
+1. [Đăng Ký Người Dùng](#1-api-dang-ky-nguoi-dung)
+2. [Xác Minh Người Dùng (Verify OTP)](#2-api-xac-minh-nguoi-dung-verify-otp)
+3. [Đăng Nhập Người Dùng](#3-api-dang-nhap-nguoi-dung)
+4. [Lấy Thông Tin Cá Nhân](#4-api-lay-thong-tin-ca-nhan)
+5. [Lấy Danh Sách Khóa Học Đã Mua](#5-api-lay-danh-sach-khoa-hoc-da-mua)
+6. [Checkout (Thanh Toán Stripe)](#6-api-checkout-tao-phien-thanh-toan-stripe)
+7. [Xác Thực Thanh Toán](#7-api-xac-thuc-thanh-toan)
+
+---
+
 ## 1. API Đăng Ký Người Dùng
 
 ### Thông Tin Cơ Bản
@@ -284,6 +296,142 @@ token: <your_jwt_token_here>
 **Nguyên nhân:** Token đã hết hạn hoặc không hợp lệ.
 
 ---
+
+## 5. API Lấy Danh Sách Khóa Học Đã Mua
+
+### Thông Tin Cơ Bản
+
+| Thành phần | Giá trị |
+|------------|---------|
+| **HTTP Method** | `GET` |
+| **Endpoint** | `/api/user/mycourse` |
+| **URL đầy đủ** | `http://localhost:5000/api/user/mycourse` |
+| **Authentication** | Yêu cầu `token` trong Headers |
+
+### Headers
+
+```
+token: <your_jwt_token_here>
+```
+
+### Response Thành Công (200 OK)
+
+```json
+{
+  "courses": [
+    {
+      "_id": "65f3a...",
+      "title": "Khóa học React nâng cao",
+      "description": "Mô tả khóa học...",
+      "price": 500000,
+      "image": "https://cloudinary.com/...",
+      "category": "Web Development",
+      "createdBy": "Admin Name",
+      "duration": "10 weeks"
+    }
+  ]
+}
+```
+
+---
+
+## 6. API Checkout (Tạo Phiên Thanh Toán Stripe)
+
+### Thông Tin Cơ Bản
+
+| Thành phần | Giá trị |
+|------------|---------|
+| **HTTP Method** | `POST` |
+| **Endpoint** | `/api/user/checkout/:id` |
+| **URL đầy đủ** | `http://localhost:5000/api/user/checkout/:id` |
+| **Authentication** | Yêu cầu `token` trong Headers |
+
+### Path Parameters
+- `id`: ID của khóa học muốn mua.
+
+### Headers
+
+```
+token: <your_jwt_token_here>
+```
+
+### Response Thành Công (201 Created)
+
+```json
+{
+  "course": {
+    "_id": "65f3a...",
+    "name": "Khóa học React nâng cao",
+    "price": 500000
+    // ... các trường khác
+  },
+  "session": {
+    "id": "cs_test_...",
+    "url": "https://checkout.stripe.com/..."
+    // ... thông tin phiên thanh toán Stripe
+  }
+}
+```
+
+### Response Lỗi
+
+#### 400 Bad Request - Đã mua khóa học
+```json
+{
+  "message": "Bạn đã có khóa học này rồi"
+}
+```
+
+#### 404 Not Found - Không tìm thấy khóa học
+```json
+{
+  "message": "Không tìm thấy khóa học"
+}
+```
+
+---
+
+## 7. API Xác Thực Thanh Toán
+
+### Thông Tin Cơ Bản
+
+| Thành phần | Giá trị |
+|------------|---------|
+| **HTTP Method** | `POST` |
+| **Endpoint** | `/api/user/paymentverification/:id` |
+| **URL đầy đủ** | `http://localhost:5000/api/user/paymentverification/:id` |
+| **Authentication** | Yêu cầu `token` trong Headers |
+
+### Path Parameters
+- `id`: ID của khóa học vừa thanh toán.
+
+### Request Body (JSON)
+
+```json
+{
+  "session_id": "cs_test_a1b2c3..."
+}
+```
+
+### Response Thành Công (200 OK)
+
+```json
+{
+  "message": "Mua khóa học thành công"
+}
+```
+
+### Response Lỗi
+
+#### 400 Bad Request - Thanh toán chưa hoàn tất
+```json
+{
+  "message": "Thanh toán chưa hoàn tất"
+}
+```
+
+---
+
 
 ## Quy Trình Đăng Ký Hoàn Chỉnh
 

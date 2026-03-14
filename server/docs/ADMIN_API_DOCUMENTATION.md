@@ -15,6 +15,7 @@
 3. [Xóa Khóa Học](#3-api-xoa-khoa-hoc)
 4. [Thêm Bài Giảng Vào Khóa Học](#4-api-them-bai-giang-vao-khoa-hoc)
 5. [Xóa Bài Giảng](#5-api-xoa-bai-giang)
+6. [Lấy Thống Kê Hệ Thống](#6-api-lay-thong-ke-he-thong)
 
 ---
 
@@ -227,3 +228,37 @@ token: <your_admin_jwt_token_here>
   "message": "Không tìm thấy bài giảng"
 }
 ```
+
+---
+
+## 6. API Lấy Thống Kê Hệ Thống
+
+### Thông Tin Cơ Bản
+
+| Thành phần | Giá trị |
+|------------|---------|
+| **HTTP Method** | `GET` |
+| **Endpoint** | `/api/admin/stats` |
+| **URL đầy đủ** | `http://localhost:5000/api/admin/stats` |
+| **Authentication** | Yêu cầu `token` (Admin) |
+
+### Headers
+
+```
+token: <your_admin_jwt_token_here>
+```
+
+### Response Thành Công (200 OK)
+
+```json
+{
+  "totalCourses": 10,
+  "totalLectures": 50,
+  "totalUsers": 100
+}
+```
+
+**Giải thích các trường:**
+- `totalCourses`: Tổng số khóa học hiện có.
+- `totalLectures`: Tổng số bài giảng hiện có.
+- `totalUsers`: Tổng số người dùng trong hệ thống.

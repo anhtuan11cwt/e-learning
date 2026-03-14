@@ -156,3 +156,11 @@ export const deleteLecture = tryCatch(async (req, res) => {
 
   res.json({ message: "Xóa bài giảng thành công" });
 });
+
+export const getStats = tryCatch(async (_req, res) => {
+  const totalCourses = await Course.countDocuments();
+  const totalLectures = await Lecture.countDocuments();
+  const totalUsers = await User.countDocuments();
+
+  res.json({ totalCourses, totalLectures, totalUsers });
+});
