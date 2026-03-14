@@ -12,7 +12,8 @@
 
 1. [Lấy Tất Cả Khóa Học](#1-api-lay-tat-ca-khoa-hoc)
 2. [Lấy Chi Tiết Khóa Học](#2-api-lay-chi-tiet-khoa-hoc)
-3. [Lấy Danh Sách Bài Giảng](#3-api-lay-danh-sach-bai-giang)
+3. [Lấy Chi Tiết Bài Giảng](#3-api-lay-chi-tiet-bai-giang)
+4. [Lấy Danh Sách Bài Giảng](#4-api-lay-danh-sach-bai-giang)
 
 ---
 
@@ -88,7 +89,44 @@
 
 ---
 
-## 3. API Lấy Danh Sách Bài Giảng
+## 3. API Lấy Chi Tiết Bài Giảng
+
+### Thông Tin Cơ Bản
+
+| Thành phần | Giá trị |
+|------------|---------|
+| **HTTP Method** | `GET` |
+| **Endpoint** | `/api/course/lecture/:id` |
+| **URL đầy đủ** | `http://localhost:5000/api/course/lecture/:id` |
+| **Authentication** | Không yêu cầu |
+
+### Response Thành Công (200 OK)
+
+```json
+{
+  "lecture": {
+    "_id": "65f3z...",
+    "course": "65f3a...",
+    "title": "Bài 1: Giới thiệu",
+    "description": "Nội dung bài học...",
+    "video": "https://cloudinary.com/..."
+  }
+}
+```
+
+### Response Lỗi
+
+#### 404 Not Found
+
+```json
+{
+  "message": "Không tìm thấy bài giảng"
+}
+```
+
+---
+
+## 4. API Lấy Danh Sách Bài Giảng
 
 ### Thông Tin Cơ Bản
 

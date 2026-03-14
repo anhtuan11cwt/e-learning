@@ -16,6 +16,14 @@ export const getSingleCourse = tryCatch(async (req, res) => {
   res.json({ course });
 });
 
+export const fetchLecture = tryCatch(async (req, res) => {
+  const lecture = await Lecture.findById(req.params.id);
+  if (!lecture) {
+    return res.status(404).json({ message: "Không tìm thấy bài giảng" });
+  }
+  res.json({ lecture });
+});
+
 export const fetchLectures = tryCatch(async (req, res) => {
   const lectures = await Lecture.find({ course: req.params.id });
   const user = await User.findById(req.user._id);

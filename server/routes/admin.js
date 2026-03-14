@@ -3,6 +3,7 @@ import {
   addLectures,
   createCourse,
   deleteCourse,
+  deleteLecture,
   updateCourse,
 } from "../controllers/adminController.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
@@ -18,5 +19,7 @@ router.put("/update/:id", isAuthenticated, isAdmin, uploadFiles, updateCourse);
 router.delete("/delete/:id", isAuthenticated, isAdmin, deleteCourse);
 
 router.post("/course/:id", isAuthenticated, isAdmin, uploadFiles, addLectures);
+
+router.delete("/lecture/:id", isAuthenticated, isAdmin, deleteLecture);
 
 export default router;

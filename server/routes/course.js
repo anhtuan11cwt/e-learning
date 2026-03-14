@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  fetchLecture,
   fetchLectures,
   getAllCourses,
   getSingleCourse,
@@ -10,6 +11,7 @@ const router = express.Router();
 
 router.get("/all", getAllCourses);
 router.get("/:id", getSingleCourse);
+router.get("/lecture/:id", fetchLecture);
 router.get("/:id/lectures", isAuthenticated, fetchLectures);
 
 export default router;

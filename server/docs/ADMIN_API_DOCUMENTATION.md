@@ -14,6 +14,7 @@
 2. [Cập Nhật Khóa Học](#2-api-cap-nhat-khoa-hoc)
 3. [Xóa Khóa Học](#3-api-xoa-khoa-hoc)
 4. [Thêm Bài Giảng Vào Khóa Học](#4-api-them-bai-giang-vao-khoa-hoc)
+5. [Xóa Bài Giảng](#5-api-xoa-bai-giang)
 
 ---
 
@@ -195,5 +196,34 @@ token: <your_admin_jwt_token_here>
 ```json
 {
   "message": "Không tìm thấy khóa học với ID này"
+}
+```
+
+---
+
+## 5. API Xóa Bài Giảng
+
+### Thông Tin Cơ Bản
+
+| Thành phần | Giá trị |
+|------------|---------|
+| **HTTP Method** | `DELETE` |
+| **Endpoint** | `/api/admin/lecture/:id` |
+| **URL đầy đủ** | `http://localhost:5000/api/admin/lecture/:id` |
+| **Authentication** | Yêu cầu `token` (Admin) |
+
+### Response Thành Công (200 OK)
+
+```json
+{
+  "message": "Xóa bài giảng thành công"
+}
+```
+
+#### 404 Not Found
+
+```json
+{
+  "message": "Không tìm thấy bài giảng"
 }
 ```
