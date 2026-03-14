@@ -1,12 +1,15 @@
 import dotenv from "dotenv";
 import express from "express";
 import connectDb from "./database/db.js";
+import userRoutes from "./routes/user.js";
 
 dotenv.config();
 
 const app = express();
 
 const port = process.env.PORT || 5000;
+
+app.use("/api", userRoutes);
 
 app.get("/", (_req, res) => {
   res.send("Server đang hoạt động");
