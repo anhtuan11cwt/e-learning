@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addLectures,
   createCourse,
   deleteCourse,
   updateCourse,
@@ -15,5 +16,7 @@ router.post("/create", isAuthenticated, isAdmin, uploadFiles, createCourse);
 router.put("/update/:id", isAuthenticated, isAdmin, uploadFiles, updateCourse);
 
 router.delete("/delete/:id", isAuthenticated, isAdmin, deleteCourse);
+
+router.post("/course/:id", isAuthenticated, isAdmin, uploadFiles, addLectures);
 
 export default router;

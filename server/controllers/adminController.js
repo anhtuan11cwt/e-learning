@@ -1,5 +1,6 @@
 import { tryCatch } from "../middlewares/tryCatch.js";
 import Course from "../models/course.js";
+import Lecture from "../models/lecture.js";
 import {
   deleteFromCloudinary,
   uploadToCloudinary,
@@ -70,6 +71,28 @@ export const updateCourse = tryCatch(async (req, res) => {
   res.json({ course, message: "Cập nhật khóa học thành công" });
 });
 
-export const addLectures = tryCatch(async (_req, res) => {
-  res.send("Thêm bài học");
+export const addLectures = tryCatch(async (req, res) => {
+  const course = await Course.findById(req.params.id);
+
+  if (!course) {
+    return res
+      .status(404)
+      .json({ message: "Không tìm thấy khóa học với ID này" });
+  }
+
+  const { title, description } = req.body;
+  let video = "";
+
+  if (req.file) {
+    video = await uploadToCloudinary(req.file.buffer, "lectures");
+  }
+
+  const lecture = await Lecture.create({
+    course: course._id,
+    description,
+    title,
+    video,
+  });
+
+  res.status(201).json({ lecture, message: "Đã thêm bài giảng thành công" });
 });
