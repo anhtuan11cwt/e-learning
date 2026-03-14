@@ -146,6 +146,145 @@ Content-Type: application/json
 
 ---
 
+## 3. API Đăng Nhập Người Dùng
+
+### Thông Tin Cơ Bản
+
+| Thành phần | Giá trị |
+|------------|---------|
+| **HTTP Method** | `POST` |
+| **Endpoint** | `/api/user/login` |
+| **URL đầy đủ** | `http://localhost:5000/api/user/login` |
+| **Authentication** | Không yêu cầu |
+
+### Headers
+
+```
+Content-Type: application/json
+```
+
+### Request Body (JSON)
+
+```json
+{
+  "email": "nguyenvana@example.com",
+  "password": "password123"
+}
+```
+
+**Giải thích các trường:**
+- `email` (string, bắt buộc): Email của người dùng đã đăng ký
+- `password` (string, bắt buộc): Mật khẩu của người dùng
+
+### Response Thành Công (200 OK)
+
+```json
+{
+  "message": "Chào mừng quay trở lại, Nguyễn Văn A",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "_id": "65f3a...",
+    "name": "Nguyễn Văn A",
+    "email": "nguyenvana@example.com",
+    "role": "user",
+    "createdAt": "2024-03-14T..."
+  }
+}
+```
+
+**Giải thích:**
+- `message`: Thông báo chào mừng kèm tên người dùng
+- `token`: JWT token dùng để xác thực cho các yêu cầu sau này (hết hạn sau 15 ngày)
+- `user`: Thông tin chi tiết của người dùng
+
+### Response Lỗi
+
+#### 400 Bad Request - Sai Email
+
+```json
+{
+  "message": "Không tìm thấy người dùng với email này"
+}
+```
+
+#### 400 Bad Request - Sai Mật Khẩu
+
+```json
+{
+  "message": "Mật khẩu không đúng"
+}
+```
+
+---
+
+## 4. API Lấy Thông Tin Cá Nhân
+
+### Thông Tin Cơ Bản
+
+| Thành phần | Giá trị |
+|------------|---------|
+| **HTTP Method** | `GET` |
+| **Endpoint** | `/api/user/me` |
+| **URL đầy đủ** | `http://localhost:5000/api/user/me` |
+| **Authentication** | Yêu cầu `token` trong Headers |
+
+### Headers
+
+```
+Content-Type: application/json
+token: <your_jwt_token_here>
+```
+
+**Lưu ý:** `token` là chuỗi nhận được từ API Đăng nhập.
+
+### Response Thành Công (200 OK)
+
+```json
+{
+  "user": {
+    "_id": "65f3a...",
+    "name": "Nguyễn Văn A",
+    "email": "nguyenvana@example.com",
+    "role": "user",
+    "createdAt": "2024-03-14T..."
+  }
+}
+```
+
+### Response Lỗi
+
+#### 400 Bad Request - Chưa Đăng Nhập
+
+```json
+{
+  "message": "Vui lòng đăng nhập"
+}
+```
+
+**Nguyên nhân:** Không cung cấp `token` trong Headers.
+
+#### 400 Bad Request - Người dùng không tồn tại
+
+```json
+{
+  "message": "Không tìm thấy người dùng"
+}
+```
+
+**Nguyên nhân:** Token hợp lệ nhưng ID người dùng trong token không còn tồn tại trong database.
+
+#### 500 Internal Server Error
+
+```json
+{
+  "message": "jwt expired"
+}
+```
+
+**Nguyên nhân:** Token đã hết hạn hoặc không hợp lệ.
+
+---
+
 ## Quy Trình Đăng Ký Hoàn Chỉnh
 
 1. **Bước 1:** Gọi API `/api/user/register` với thông tin `name`, `email`, `password`
@@ -154,11 +293,16 @@ Content-Type: application/json
 2. **Bước 2:** Kiểm tra email để lấy mã OTP (6 chữ số)
 
 3. **Bước 3:** Gọi API `/api/user/verify` với `otp` và `activationToken` nhận được ở bước 1
-   - Nếu thành công, tài khoản được tạo và có thể đăng nhập
+   - Nếu thành công, tài khoản được tạo.
+
+4. **Bước 4:** Sử dụng email và mật khẩu để gọi API `/api/user/login`
+   - Nhận được `token` dùng để truy cập các tài nguyên bị giới hạn.
+
+5. **Bước 5:** Sử dụng `token` trong header để gọi các API khác, ví dụ `/api/user/me`.
 
 **Lưu ý:**
-- Token kích hoạt chỉ có hiệu lực trong 5 phút
-- Mỗi email chỉ có thể đăng ký một lần
-- Mật khẩu được mã hóa bằng bcrypt trước khi lưu vào database
+- Token kích hoạt (đăng ký) chỉ có hiệu lực trong 5 phút.
+- Token đăng nhập có hiệu lực trong 15 ngày.
+- Token được gửi qua header với tên là `token`.
 
 ---

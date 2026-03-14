@@ -52,3 +52,35 @@ export const verifyUser = tryCatch(async (req, res) => {
 
   res.status(200).json({ message: "Đăng ký thành công" });
 });
+
+export const loginUser = tryCatch(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res
+      .status(400)
+      .json({ message: "Không tìm thấy người dùng với email này" });
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ message: "Mật khẩu không đúng" });
+  }
+
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "15d",
+  });
+
+  res.status(200).json({
+    message: `Chào mừng quay trở lại, ${user.name}`,
+    token,
+    user,
+  });
+});
+
+export const myProfile = tryCatch(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  res.status(200).json({ user });
+});
